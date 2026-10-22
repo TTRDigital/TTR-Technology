@@ -361,7 +361,7 @@ ErrorDocument 410 /404.html
   RewriteCond %{DOCUMENT_ROOT}/images/$1-scaled$2 -f
   RewriteRule ^wp-content/uploads/(\d{4}/\d{2}/.+?)(?:-\d+x\d+)?(\.(?:jpe?g|png|gif|webp))$ https://%{HTTP_HOST}/images/$1-scaled$2 [R=301,L,NC]
   RewriteRule ^wp-content/uploads/\d{4}/\d{2}/(TTR-Technology-Managed-IT-Solutions\.mp4)$ https://%{HTTP_HOST}/video/$1 [R=301,L,NC]
-  RewriteRule ^favicon\.ico$ https://%{HTTP_HOST}/icons/favicon-32x32.png [R=301,L]
+  RewriteRule ^favicon\.ico$ https://%{HTTP_HOST}/brand/favicon-32x32.png [R=301,L]
 
   # WordPress sitemaps -> the one sitemap.
   RewriteRule ^(?:sitemap_index|wp-sitemap(?:-[a-z0-9_-]+)?|[a-z0-9_]+-sitemap\d*|main-sitemap)\.(?:xml|xsl)$ https://%{HTTP_HOST}/sitemap.xml [R=301,L,NC]

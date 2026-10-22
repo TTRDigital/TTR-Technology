@@ -1075,6 +1075,19 @@ button.swiper-pagination-bullet{border:none;margin:0;padding:0;box-shadow:none;-
 .site-wrap.elementor-page-5518 .page-content a{text-decoration: none}
 .site-wrap.elementor-page-5486 .page-content a{text-decoration: none}
 
+:where(.wp-block-group.wp-block-group-is-layout-constrained){position:relative}
+html :where([style^=border-color],[style*=";border-color"],[style*="; border-color"]){border-style:solid}
+html :where([style^=border-top-color],[style*=";border-top-color"],[style*="; border-top-color"]){border-top-style:solid}
+html :where([style^=border-right-color],[style*=";border-right-color"],[style*="; border-right-color"]){border-right-style:solid}
+html :where([style^=border-bottom-color],[style*=";border-bottom-color"],[style*="; border-bottom-color"]){border-bottom-style:solid}
+html :where([style^=border-left-color],[style*=";border-left-color"],[style*="; border-left-color"]){border-left-style:solid}
+html :where([style^=border-width],[style*=";border-width"],[style*="; border-width"]){border-style:solid}
+html :where([style^=border-top-width],[style*=";border-top-width"],[style*="; border-top-width"]){border-top-style:solid}
+html :where([style^=border-right-width],[style*=";border-right-width"],[style*="; border-right-width"]){border-right-style:solid}
+html :where([style^=border-bottom-width],[style*=";border-bottom-width"],[style*="; border-bottom-width"]){border-bottom-style:solid}
+html :where([style^=border-left-width],[style*=";border-left-width"],[style*="; border-left-width"]){border-left-style:solid}
+:where(figure){margin:0 0 1em}
+:where(.elementor-widget-n-accordion .e-n-accordion-item>.e-con){border:var(--n-accordion-border-width) var(--n-accordion-border-style) var(--n-accordion-border-color)}
 /* document 3141 */
 .elementor-3141 .elementor-element.elementor-element-8ffa122{--display:flex;--min-height:50px;--flex-direction:row;--container-widget-width:initial;--container-widget-height:100%;--container-widget-flex-grow:1;--container-widget-align-self:stretch;--flex-wrap-mobile:wrap;--gap:20px 20px;--row-gap:20px;--column-gap:20px;box-shadow:0px 0px 10px 0px rgba(0, 21.00000000000001, 46, 0.23);--padding-top:0px;--padding-bottom:0px;--padding-left:0px;--padding-right:0px;--z-index:999}
 .elementor-3141 .elementor-element.elementor-element-8ffa122:not(.elementor-motion-effects-element-type-background), .elementor-3141 .elementor-element.elementor-element-8ffa122 > .elementor-motion-effects-container > .elementor-motion-effects-layer{background-color:#00152E}

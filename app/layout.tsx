@@ -9,13 +9,13 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   applicationName: "TTR Technology",
   formatDetection: { telephone: false, address: false, email: false },
-  other: { "msapplication-TileImage": "/icons/favicon-270x270.png" },
+  other: { "msapplication-TileImage": "/brand/favicon-270x270.png" },
   icons: {
     icon: [
-      { url: "/icons/favicon-32x32.png", sizes: "32x32", type: "image/png" },
-      { url: "/icons/favicon-192x192.png", sizes: "192x192", type: "image/png" },
+      { url: "/brand/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/brand/favicon-192x192.png", sizes: "192x192", type: "image/png" },
     ],
-    apple: "/icons/favicon-180x180.png",
+    apple: "/brand/favicon-180x180.png",
   },
 };
 
