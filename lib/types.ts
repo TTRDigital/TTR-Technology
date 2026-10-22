@@ -142,4 +142,6 @@ export type RenderCtx = {
   templates: Record<string, EbDoc>;
   /** Images the page shows first (eager + high fetch priority). */
   hero?: Set<string>;
+  /** The page's own address (/blog/ for /blog/2/), to mark its menu item as current. */
+  path?: string;
 };

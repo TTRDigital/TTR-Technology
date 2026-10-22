@@ -58,6 +58,7 @@ export default async function Page({ params }: { params: Promise<Params> }) {
     templates: templates.templates,
     hero: heroKeys(hero),
     pageNum: route.kind === "page" ? route.pageNum : undefined,
+    path: route.kind === "page" && route.pageNum ? route.path.replace(/\d+\/$/, "") : route.path,
     post: route.kind === "post" ? route.post : "item" in route ? route.item : undefined,
     postKind: route.kind === "post" ? "post" : "item" in route ? route.kind : undefined,
   };

@@ -6,19 +6,31 @@ import { Img } from "./Img";
 /*
  * The header menu (ElementsKit nav menu markup, so its design rules apply).
  * Desktop dropdowns open on hover in CSS; the phone menu, submenus and the
- * "never wrap" switch are wired up by components/layout/Runtime.tsx.
+ * "never wrap" switch are wired up by lib/runtime-script.ts. Like WordPress, the
+ * item linking to the current page is marked current (and its parent an ancestor),
+ * which the header's design rules color.
  */
 
 export type MenuItem = { _key: string; label: string; href: string; liCls?: string; aCls?: string; width?: string; panel?: string; children?: MenuItem[] };
 
 const INDICATOR = <i aria-hidden="true" className="icon icon-down-arrow1 elementskit-submenu-indicator"></i>;
 
+const CURRENT = /\s*\b(current-menu-item|current_page_item|current-menu-ancestor|current-menu-parent|active)\b/g;
+const isCurrent = (it: MenuItem, path?: string) => !!path && it.href === path;
+const hasCurrent = (it: MenuItem, path?: string): boolean => (it.children ?? []).some((c) => isCurrent(c, path) || hasCurrent(c, path));
+
 function Item({ it, ctx, top }: { it: MenuItem; ctx: RenderCtx; top: boolean }) {
   const hasSub = !!it.children?.length;
   const panelDoc = it.panel ? ctx.templates[it.panel] : undefined;
   const id = it._key;
+  const mark = isCurrent(it, ctx.path)
+    ? " current-menu-item current_page_item active"
+    : hasCurrent(it, ctx.path)
+      ? ` current-menu-ancestor${it.children?.some((c) => isCurrent(c, ctx.path)) ? " current-menu-parent" : ""}`
+      : "";
+  const liCls = `${(it.liCls ?? "").replace(CURRENT, "")}${mark}`.trim() || undefined;
   return (
-    <li className={it.liCls} data-vertical-menu={it.width}>
+    <li className={liCls} data-vertical-menu={it.width}>
       <a
         href={it.href || "#"}
         className={it.aCls || (top ? "ekit-menu-nav-link" : "dropdown-item")}
