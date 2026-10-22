@@ -55,7 +55,7 @@ function Container({ node, ctx, depth }: Props) {
   const kids = (node.children ?? []).map((c) => <Node key={c._key} node={c} ctx={ctx} depth={depth + 1} />);
   return (
     <Tag
-      className={`elementor-element elementor-element-${node._key} ${cls} e-con ${depth === 0 ? "e-parent" : "e-child"}`}
+      className={`elementor-element elementor-element-${node._key} ${cls} e-con ${depth === 0 ? "e-parent" : "e-child"}${depth === 0 && ctx.hero?.has(node._key) ? " e-no-lazyload" : ""}`}
       data-id={node._key}
       data-element_type="container"
       data-settings={node.settings}

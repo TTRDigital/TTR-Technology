@@ -21,11 +21,16 @@ export function runtimeScript(tags: { gtm?: string; ga?: string }) {
 function start(){try{menu();}catch(e){}try{reveal();}catch(e){}try{bg();}catch(e){}try{carousels();}catch(e){}try{accordions();}catch(e){}try{scripts();}catch(e){}try{forms();}catch(e){}try{search();}catch(e){}try{posts();}catch(e){}}
 start();
 var GTM=${JSON.stringify(tags.gtm ?? "")},GA=${JSON.stringify(tags.ga ?? "")};
+/* Analytics load on the visitor's first interaction (scroll, tap, key, mouse) or 5 s after the
+   page has loaded, whichever comes first, so ~700 KB of tag scripts never delay the page itself. */
+var tagged=false;
 function tags(){
+  if(tagged)return;tagged=true;
   if(GTM){(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({"gtm.start":new Date().getTime(),event:"gtm.js"});var f=d.getElementsByTagName(s)[0],j=d.createElement(s);j.async=true;j.src="https://www.googletagmanager.com/gtm.js?id="+i;f.parentNode.insertBefore(j,f)})(window,document,"script","dataLayer",GTM)}
   if(GA){window.dataLayer=window.dataLayer||[];window.gtag=function(){dataLayer.push(arguments)};gtag("set","linker",{domains:["ttrtechnology.com"]});gtag("js",new Date());gtag("set","developer_id.dZTNiMT",true);gtag("config",GA);var g=document.createElement("script");g.async=true;g.src="https://www.googletagmanager.com/gtag/js?id="+GA;document.head.appendChild(g)}
 }
-if(document.readyState==="complete")setTimeout(tags,1);else window.addEventListener("load",function(){setTimeout(tags,1)});
+["scroll","pointerdown","keydown","touchstart","mousemove"].forEach(function(ev){window.addEventListener(ev,tags,{once:true,passive:true})});
+if(document.readyState==="complete")setTimeout(tags,5000);else window.addEventListener("load",function(){setTimeout(tags,5000)});
 
 function settings(el){try{return JSON.parse(el.getAttribute("data-settings")||"{}")}catch(e){return {}}}
 function onView(el,fn,margin){if(!("IntersectionObserver" in window)){fn();return}var io=new IntersectionObserver(function(es){for(var i=0;i<es.length;i++){if(es[i].isIntersecting){io.disconnect();fn();break}}},{rootMargin:margin||"0px 0px -8% 0px"});io.observe(el)}

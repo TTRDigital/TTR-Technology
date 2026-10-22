@@ -65,6 +65,8 @@ Automatic deploys (`.github/workflows/deploy-siteground.yml`) build and upload o
 
 Repository **variables** (not secrets): `SANITY_PROJECT_ID`, `SG_FTP_DIR` (default `./public_html/`), `GTM_ID` / `GA_ID` (default to the live site's `GTM-NP26ZWXW` and `GT-PLWZ36P4`).
 
+**Analytics:** the same Google Tag Manager container and Site Kit tag as before. They load on the visitor's first scroll, tap, key press or mouse move, or 5 seconds after the page has loaded, whichever comes first, so they don't slow the page down (`lib/runtime-script.ts`).
+
 **Publish → live:** sanity.io/manage > API > Webhooks: URL `https://api.github.com/repos/TTRDigital/TTR-Technology/dispatches`, method POST, triggers create/update/delete, projection `{"event_type": "sanity-publish"}`, headers `Authorization: Bearer <GitHub fine-grained token with Contents: read and write on this repo>` and `Accept: application/vnd.github+json`.
 
 **Go-live:** the domain's DNS is at SiteGround (ns1/ns2.siteground.net) and stays there. Upload into the site's `public_html` (replacing WordPress there, or a new SiteGround site), check it on the temporary address first (note: `.htaccess` sends every other host to the main domain, so check before or right after the switch), then point the domain at it. Keep the existing MX/TXT records. Turn on Site Tools > Security > SSL Manager (Let's Encrypt) and HTTPS Enforce.

@@ -16,7 +16,8 @@ export function PostTitle({ node, ctx }: { node: EbNode; ctx: RenderCtx }) {
 export function PostImage({ ctx }: { ctx: RenderCtx }) {
   const p = ctx.post as Post | undefined;
   if (!p?.image) return null;
-  return <Img img={{ ...p.image, dw: p.image.width, dh: p.image.height, sizes: `(max-width: ${p.image.width ?? 1920}px) 100vw, ${p.image.width ?? 1920}px` }} />;
+  // the post's banner, at the top of the layout: loaded first
+  return <Img img={{ ...p.image, dw: p.image.width, dh: p.image.height, sizes: `(max-width: ${p.image.width ?? 1920}px) 100vw, ${p.image.width ?? 1920}px` }} priority />;
 }
 
 type InfoItem = { _key: string; type: string; repeaterCls?: string; itemprop?: string; icon?: IconValue; linked?: boolean };

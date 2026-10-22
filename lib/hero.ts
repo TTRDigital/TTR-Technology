@@ -23,14 +23,16 @@ export function heroSections(doc: EbDoc): EbNode[] {
   return out;
 }
 
-/** Keys of image widgets inside the hero sections. */
+/** Keys of image widgets (and posts lists, whose first image is then loaded first) inside the hero sections. */
 export function heroKeys(sections: EbNode[]): Set<string> {
   const keys = new Set<string>();
   const walk = (n: EbNode) => {
-    if (n._type === "image" || n._type === "imageBox") keys.add(n._key);
+    if (n._type === "image" || n._type === "imageBox" || n._type === "posts") keys.add(n._key);
     (n.children ?? []).forEach(walk);
   };
   sections.forEach(walk);
+  // the sections themselves: their backgrounds are never lazy-loaded (class e-no-lazyload)
+  sections.forEach((sec) => keys.add(sec._key));
   return keys;
 }
 

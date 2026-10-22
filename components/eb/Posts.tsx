@@ -18,7 +18,7 @@ export function excerpt(p: Post, words = 55) {
   return all.slice(0, words).join(" ");
 }
 
-function Article({ p, node }: { p: Post; node: EbNode }) {
+function Article({ p, node, priority }: { p: Post; node: EbNode; priority?: boolean }) {
   const T = ((node.titleTag as string) ?? "h3") as "h3";
   const cards = node.skin === "cards";
   // the image size the widget used (e.g. WordPress "medium", 300px wide), else the full image
@@ -27,7 +27,7 @@ function Article({ p, node }: { p: Post; node: EbNode }) {
   const thumb = node.showThumb && p.image ? (
     <a className="elementor-post__thumbnail__link" href={p.path} tabIndex={-1} target={node.thumbNewTab ? "_blank" : undefined}>
       <div className="elementor-post__thumbnail">
-        <Img img={{ ...p.image, dw: tw, dh: th, sizes: `(max-width: ${tw ?? 1280}px) 100vw, ${tw ?? 1280}px` }} />
+        <Img img={{ ...p.image, dw: tw, dh: th, sizes: `(max-width: ${tw ?? 1280}px) 100vw, ${tw ?? 1280}px` }} priority={priority} />
       </div>
     </a>
   ) : null;
@@ -94,8 +94,8 @@ export function PostsWidget({ node, ctx }: { node: EbNode; ctx: RenderCtx }) {
   return (
     <>
       <div className={`elementor-posts-container elementor-posts elementor-posts--skin-${node.skin === "cards" ? "cards" : "classic"} elementor-grid`}>
-        {list.map((p) => (
-          <Article key={p.slug} p={p} node={node} />
+        {list.map((p, i) => (
+          <Article key={p.slug} p={p} node={node} priority={i === 0 && !!ctx.hero?.has(node._key)} />
         ))}
       </div>
       {node.pagination && total > 1 ? (

@@ -16,6 +16,9 @@ const nextConfig: NextConfig = {
   // /about-us/ -> about-us/index.html, which Apache serves as is (the live URLs end in a slash).
   trailingSlash: true,
   poweredByHeader: false,
+  // The shared stylesheet goes into each page's <head>: no render-blocking request
+  // before the first paint (about 0.3 s on a phone connection).
+  experimental: { inlineCss: true },
   images: {
     loader: "custom",
     loaderFile: "./lib/image-loader.ts",

@@ -12,6 +12,8 @@ import { JsonLd } from "@/components/eb/JsonLd";
 import { SiteFrame } from "@/components/layout/SiteFrame";
 import { Rich } from "@/components/eb/Rich";
 
+const POST_FONTS = ["/fonts/poppins-400-normal.woff2", "/fonts/poppins-500-normal.woff2", "/fonts/montserrat-600-normal.woff2"];
+
 // Static export: every live URL is generated at build time; anything else is the 404 page.
 export const dynamicParams = false;
 
@@ -46,6 +48,9 @@ export default async function Page({ params }: { params: Promise<Params> }) {
   // First screen: eager images, preloaded backgrounds.
   const hero = doc ? heroSections(doc) : [];
   for (const bg of doc ? heroBackgrounds(doc, hero) : []) preload(bg.href, { as: "image", fetchPriority: "high", ...(bg.media ? { media: bg.media } : {}) });
+  // Blog posts: the fonts of the text in the first screen load first, so the long text
+  // doesn't reflow when they arrive (other pages paint sooner without these preloads).
+  if (route.kind === "post") for (const href of POST_FONTS) preload(href, { as: "font", type: "font/woff2", crossOrigin: "anonymous" });
 
   const ctx: RenderCtx = {
     posts,
