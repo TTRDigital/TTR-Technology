@@ -1,0 +1,13 @@
+/*
+ * Styles: the live site's own design rules (generated, see app/styles/elementor.css),
+ * its fonts, and Tailwind utilities for the few parts written for this site.
+ * No Tailwind preflight: the live theme's own reset (Hello Elementor) applies.
+ */
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities) source(none);
+@source "../components";
+@source "../app";
+
+@import "./styles/fonts.css";
+@import "./styles/elementor.css";
+@import "./styles/site.css";

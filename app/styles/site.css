@@ -1,0 +1,80 @@
+/*
+ * Small additions for behaviour the live site had through plugin scripts.
+ */
+
+/* Phone menu submenus open with the arrow (ElementsKit slid them open with jQuery).
+   The phone menu is used below 1120px (the desktop menu wrapped below 1102px on the live site),
+   or whenever the runtime finds the desktop menu does not fit (html.ttr-nav-collapsed). */
+@media (max-width: 1119px) {
+  .ekit_menu_responsive_tablet .elementskit-navbar-nav .elementskit-dropdown.elementskit-dropdown-open,
+  .ekit_menu_responsive_tablet .elementskit-navbar-nav .elementskit-megamenu-panel.elementskit-dropdown-open {
+    display: block;
+  }
+}
+html.ttr-nav-collapsed .ekit_menu_responsive_tablet .elementskit-navbar-nav .elementskit-dropdown.elementskit-dropdown-open,
+html.ttr-nav-collapsed .ekit_menu_responsive_tablet .elementskit-navbar-nav .elementskit-megamenu-panel.elementskit-dropdown-open {
+  display: block;
+}
+
+/* Hidden dropdown panels of the last menu items reached past the right edge and gave the
+   live page a sideways scroll between 1101 and 1185px; clipping keeps them from doing so. */
+html {
+  overflow-x: clip;
+}
+
+/* Background video: shown once the runtime has started it. */
+.elementor-background-video-container video:not([src]) {
+  visibility: hidden;
+}
+
+/* Download form errors (Fluent Forms styles them; these match). */
+.ff-el-is-error .ff-el-form-control {
+  border-color: #f56c6c;
+}
+.ff-el-group .error.text-danger {
+  color: #f56c6c;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+/* Skip link: visible only when focused. */
+.skip-link.screen-reader-text:focus {
+  position: fixed;
+  z-index: 100000;
+  top: 8px;
+  left: 8px;
+  clip: auto;
+  width: auto;
+  height: auto;
+  padding: 12px 20px;
+  background: #fff;
+  color: #00152e;
+}
+
+/* WordPress block layouts (from the live site's global styles): the "group" block one post uses */
+:root {
+  --wp--style--global--content-size: 800px;
+  --wp--style--global--wide-size: 1200px;
+}
+:root :where(.is-layout-flow) > :first-child,
+:root :where(.is-layout-constrained) > :first-child {
+  margin-block-start: 0;
+}
+:root :where(.is-layout-flow) > :last-child,
+:root :where(.is-layout-constrained) > :last-child {
+  margin-block-end: 0;
+}
+:root :where(.is-layout-flow) > *,
+:root :where(.is-layout-constrained) > * {
+  margin-block-start: 24px;
+  margin-block-end: 0;
+}
+.is-layout-constrained > :where(:not(.alignleft):not(.alignright):not(.alignfull)) {
+  max-width: var(--wp--style--global--content-size);
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+.is-layout-constrained > .aligncenter {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
