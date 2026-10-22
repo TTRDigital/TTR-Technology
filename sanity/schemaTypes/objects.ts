@@ -156,7 +156,7 @@ const faqBlock = defineType({
           type: "object",
           name: "faqItem",
           fields: [
-            defineField({ name: "question", type: "string" }),
+            defineField({ name: "question", type: "string", description: HTML_NOTE }),
             defineField({ name: "answer", type: "array", of: [defineArrayMember({ type: "block" })] }),
           ],
           preview: { select: { title: "question" } },

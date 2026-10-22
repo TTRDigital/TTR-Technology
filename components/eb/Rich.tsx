@@ -1,6 +1,6 @@
 import { Fragment, type ReactNode } from "react";
 import type { FaqBlock, ImageBlock, MarkDef, Rich as RichT, RichBlock, Span, TextBlock } from "@/lib/types";
-import { cssToStyle, isPlaceholder } from "@/lib/text";
+import { cssToStyle, isPlaceholder, safeInline } from "@/lib/text";
 import { Img } from "./Img";
 
 /*
@@ -122,25 +122,24 @@ function imageBlock(b: ImageBlock): ReactNode {
   return (
     <figure key={b._key} className={b.cls || "wp-block-image"}>
       {inner}
-      {b.caption ? <figcaption className="wp-element-caption">{b.caption}</figcaption> : null}
+      {b.caption ? <figcaption className="wp-element-caption">{spanContent(b.caption)}</figcaption> : null}
     </figure>
   );
 }
 
-function faqBlock(b: FaqBlock, v: Variant): ReactNode {
+/** Rank Math FAQ block, as the live posts printed it (questions keep their bold text). */
+function faqBlock(b: FaqBlock): ReactNode {
   return (
-    <div key={b._key} id="rank-math-faq" className="wp-block-rank-math-faq-block">
-      <div className="rank-math-block">
-        <div className="rank-math-list">
-          {(b.items ?? []).map((it) => (
-            <div key={it._key} className="rank-math-list-item">
-              <h3 className="rank-math-question">{it.question}</h3>
-              <div className="rank-math-answer">
-                <Rich value={it.answer} variant={v} />
-              </div>
+    <div key={b._key} id="rank-math-faq" className="rank-math-block">
+      <div className="rank-math-list">
+        {(b.items ?? []).map((it) => (
+          <div key={it._key} className="rank-math-list-item">
+            <h3 className="rank-math-question" dangerouslySetInnerHTML={{ __html: safeInline(it.question) }} />
+            <div className="rank-math-answer">
+              <Rich value={it.answer} />
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
     </div>
   );
@@ -166,7 +165,7 @@ export function Rich({ value, variant = "text" }: { value?: RichT | null; varian
       if (isPlaceholder((tb.children ?? []).map((c) => c.text).join(""))) continue;
       out.push(textBlock(tb, variant));
     } else if (b._type === "imageBlock") out.push(imageBlock(b as ImageBlock));
-    else if (b._type === "faqBlock") out.push(faqBlock(b as FaqBlock, variant));
+    else if (b._type === "faqBlock") out.push(faqBlock(b as FaqBlock));
     else if (b._type === "tableBlock")
       out.push(
         <figure key={b._key} className="wp-block-table">

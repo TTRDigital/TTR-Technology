@@ -35,7 +35,7 @@ function faqs(route: Route): { question: string; answer: string }[] {
   };
   if (route.kind === "page") walkNodes(route.page.doc.children);
   const body = route.kind === "post" ? route.post.body : "item" in route ? route.item.body : undefined;
-  for (const b of body ?? []) if (b._type === "faqBlock") for (const it of b.items ?? []) out.push({ question: it.question, answer: text(it.answer) });
+  for (const b of body ?? []) if (b._type === "faqBlock") for (const it of b.items ?? []) out.push({ question: stripTags(it.question ?? ""), answer: text(it.answer) });
   return out.filter((f) => f.question && f.answer);
 }
 

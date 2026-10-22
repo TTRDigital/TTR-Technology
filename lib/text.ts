@@ -20,13 +20,14 @@ export const isPlaceholder = (s: unknown) => typeof s === "string" && /^\s*\[PLA
 
 /**
  * Inline HTML from the content (headings, short descriptions): only simple inline
- * tags are kept, so content can never inject scripts or layout.
+ * tags are kept (and a heading pasted inside a heading, as on one live card), so
+ * content can never inject scripts.
  */
 export function safeInline(html: string | undefined | null): string {
   if (!html) return "";
   return html
     .replace(/<(script|style|iframe|object|embed)[\s\S]*?<\/\1>/gi, "")
-    .replace(/<(?!\/?(span|br|a|strong|b|em|i|font|u|sup|sub)\b)[^>]*>/gi, "")
+    .replace(/<(?!\/?(span|br|a|strong|b|em|i|font|u|sup|sub|h[1-6])\b)[^>]*>/gi, "")
     .replace(/\son\w+\s*=\s*("[^"]*"|'[^']*'|[^\s>]+)/gi, "")
     .replace(/href\s*=\s*(["'])\s*javascript:[^"']*\1/gi, 'href="#"');
 }
