@@ -33,7 +33,7 @@ One route (`app/(site)/[[...slug]]`) renders every URL from `lib/routes.ts`; any
 |---|---|
 | Contact page | HoneyCRM, through the same script as before (works on the static site) |
 | Blog post sidebar | Zoho CRM web-to-lead, unchanged |
-| Datasheet / whitepaper download | **not sent anywhere yet** (it went to WordPress before). The fields and required checks are the same; after submitting, the PDF opens. To be connected once the destination is chosen. |
+| Datasheet / whitepaper download | **not sent anywhere yet** (it went to WordPress before). The fields and required checks are the same, including the phone field's country picker (intl-tel-input in `public/vendor/`, visitor's country from ipinfo.io as before); after submitting, the PDF opens. To be connected once the destination is chosen. |
 | Blog search | searches the post titles in the page |
 
 ## Setup

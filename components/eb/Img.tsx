@@ -26,6 +26,17 @@ function originalWidth(img: ImgT) {
 }
 
 /**
+ * The resized copies round their height (640 x 427 for 780 x 520), which would draw each
+ * image a fraction of a pixel taller than the live site's file. When the original has the
+ * shape of the shown size, its exact proportions are given instead.
+ */
+function exactRatio(img: ImgT, width: number, height: number): CSSProperties {
+  const orig = img.src.startsWith("/images/") ? sizesOf[img.src] : img.width && img.height ? [img.width, img.height] : undefined;
+  if (!orig || !width || !height || img.src.endsWith(".svg")) return {};
+  return Math.abs(orig[0] / orig[1] - width / height) < 0.01 ? { aspectRatio: `${width} / ${height}` } : {};
+}
+
+/**
  * next/image lists every configured width, but a copy of a 500px original
  * asked for at 640 is still 500px wide (local copies and Sanity's fit=max never
  * upscale). Left as "640w", the browser would draw the image at 500/640 of its
@@ -55,7 +66,11 @@ function realSrcSet(srcSet: string, orig: number, shown: number) {
  * away without raising its priority, e.g. the logo, which is never preloaded).
  */
 export function Img({ img, className, priority, eager, style, extra }: { img?: ImgT | null; className?: string; priority?: boolean; eager?: boolean; style?: CSSProperties; extra?: Record<string, string> }) {
-  if (!img || !available(img.src)) return null;
+  if (!img) return null;
+  // A file that was already missing on the live site: an empty image there kept one line of
+  // height, so an empty <img> (no request) keeps the same space here.
+  // eslint-disable-next-line @next/next/no-img-element
+  if (!available(img.src)) return <img alt="" className={[className, img.cls].filter(Boolean).join(" ") || undefined} />;
   const width = img.dw ?? img.width ?? 300;
   const height = img.dh ?? img.height ?? (img.width && img.height ? Math.round((width * img.height) / img.width) : width);
   const cls = [className, img.cls].filter(Boolean).join(" ") || undefined;
@@ -68,7 +83,7 @@ export function Img({ img, className, priority, eager, style, extra }: { img?: I
     className: cls,
     loading: priority || eager ? "eager" : "lazy",
     fetchPriority: priority ? "high" : undefined,
-    style: { ...(img.style ? cssToStyle(img.style) : {}), ...style },
+    style: { ...exactRatio(img, width, height), ...(img.style ? cssToStyle(img.style) : {}), ...style },
   });
   const orig = originalWidth(img);
   if (orig && props.srcSet) props.srcSet = realSrcSet(props.srcSet, orig, width);

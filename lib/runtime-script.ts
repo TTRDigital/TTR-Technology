@@ -206,9 +206,22 @@ function search(){
 }
 
 /* ---------- download form ---------- */
+/* Download forms: the phone field's country picker (intl-tel-input, as the live forms had),
+   loaded after the page, with the live options: the visitor's country is looked up. */
+function tel(input){
+  function init(){
+    var iti=window.intlTelInput(input,{separateDialCode:false,nationalMode:true,autoPlaceholder:"polite",formatOnDisplay:true,initialCountry:"auto",utilsScript:"/vendor/intl-tel-input/utils.js",
+      geoIpLookup:function(success){fetch("https://ipinfo.io",{headers:{Accept:"application/json"}}).then(function(r){return r.json()}).then(function(d){success(d&&d.country?d.country:"")},function(){success("")})}});
+    var fmt=function(){if(window.intlTelInputUtils){var t=iti.getNumber(window.intlTelInputUtils.numberFormat.E164);if(iti.isValidNumber()&&typeof t==="string")iti.setNumber(t)}};
+    input.addEventListener("keyup",fmt);input.addEventListener("change",fmt);
+  }
+  function load(){if(window.intlTelInput){init();return}var s=document.createElement("script");s.src="/vendor/intl-tel-input/intlTelInput.min.js";s.onload=init;document.head.appendChild(s)}
+  if(document.readyState==="complete")load();else window.addEventListener("load",load);
+}
 function forms(){
   var fs=document.querySelectorAll("form.frm-fluent-form[data-pdf]");
   for(var i=0;i<fs.length;i++)(function(f){
+    var phone=f.querySelector('input[type="tel"]');if(phone)tel(phone);
     var q=new URLSearchParams(location.search).get("selected_pdf");
     var hidden=f.querySelector('input[name="hidden"]');if(q&&hidden)hidden.value=q;
     f.addEventListener("submit",function(e){

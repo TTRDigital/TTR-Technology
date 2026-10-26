@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { Fragment, type ReactNode } from "react";
 import type { EbDoc, EbNode, Img as ImgT, Link, RenderCtx, Rich as RichT } from "@/lib/types";
 import { cssToStyle, isPlaceholder, safeInline } from "@/lib/text";
 import { Img, imgUrl } from "./Img";
@@ -590,13 +590,17 @@ function SocialIcons({ node, ctx }: Props) {
   return (
     <Widget node={node} type="social-icons.default">
       <div className="elementor-social-icons-wrapper elementor-grid" role="list">
+        {/* the icons are inline blocks: the space between them is part of the live spacing */}
         {((node.items as Social[]) ?? []).map((it) => (
-          <span className="elementor-grid-item" role="listitem" key={it._key}>
-            <a className={`elementor-icon elementor-social-icon elementor-social-icon-${it.network} ${it.anim ?? ""} ${it.repeaterCls ?? ""}`} {...aProps(it.link)}>
-              <span className="elementor-screen-only">{it.label}</span>
-              <Icon value={it.icon} icons={ctx.icons} />
-            </a>
-          </span>
+          <Fragment key={it._key}>
+            {" "}
+            <span className="elementor-grid-item" role="listitem">
+              <a className={`elementor-icon elementor-social-icon elementor-social-icon-${it.network} ${it.anim ?? ""} ${it.repeaterCls ?? ""}`} {...aProps(it.link)}>
+                <span className="elementor-screen-only">{it.label}</span>
+                <Icon value={it.icon} icons={ctx.icons} />
+              </a>
+            </span>{" "}
+          </Fragment>
         ))}
       </div>
     </Widget>

@@ -52,7 +52,8 @@ function Article({ p, node, priority }: { p: Post; node: EbNode; priority?: bool
   const meta = Array.isArray(node.meta) ? (node.meta as string[]) : [];
   const metaLine = meta.length ? (
     <div className="elementor-post__meta-data">
-      {meta.includes("author") && p.author ? <span className="elementor-post-author">{p.author}</span> : null}
+      {/* inline spans: the space between them is part of the live layout */}
+      {meta.includes("author") && p.author ? <span className="elementor-post-author">{p.author}</span> : null}{" "}
       {meta.includes("date") && p.date ? <span className="elementor-post-date">{p.dateText || formatDate(p.date)}</span> : null}
     </div>
   ) : null;
