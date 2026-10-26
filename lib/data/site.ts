@@ -30,3 +30,6 @@ export const fallbackSettings: SiteSettings = {
 /** Google Tag Manager container and Google tag (Site Kit) the live site uses. */
 export const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID ?? "GTM-NP26ZWXW";
 export const GA_ID = process.env.NEXT_PUBLIC_GA_ID ?? "GT-PLWZ36P4";
+/** GoHighLevel "Inbound Webhook" workflow trigger: every form submission is also sent here (set to an empty value to turn it off). */
+export const GHL_WEBHOOK_URL =
+  process.env.NEXT_PUBLIC_GHL_WEBHOOK_URL ?? "https://services.leadconnectorhq.com/hooks/bXQtYuhubOJ9MTMGK8dY/webhook-trigger/c306bff6-7d01-48c6-9861-d5bfc5f6a8e7";

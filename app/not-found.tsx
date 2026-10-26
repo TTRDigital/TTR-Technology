@@ -2,7 +2,7 @@ import "./globals.css";
 import { getTemplates, getPosts, icons } from "@/lib/content";
 import { SiteFrame } from "@/components/layout/SiteFrame";
 import { runtimeScript } from "@/lib/runtime-script";
-import { GA_ID, GTM_ID } from "@/lib/data/site";
+import { GA_ID, GHL_WEBHOOK_URL, GTM_ID } from "@/lib/data/site";
 
 export const metadata = { title: { absolute: "Page not found | TTR Technology" }, robots: { index: false } };
 
@@ -21,7 +21,7 @@ export default async function NotFound() {
           </div>
         </main>
       </SiteFrame>
-      <script id="ttr-runtime" dangerouslySetInnerHTML={{ __html: runtimeScript({ gtm: GTM_ID, ga: GA_ID }) }} />
+      <script id="ttr-runtime" dangerouslySetInnerHTML={{ __html: runtimeScript({ gtm: GTM_ID, ga: GA_ID, ghl: GHL_WEBHOOK_URL }) }} />
     </>
   );
 }

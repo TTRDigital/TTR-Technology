@@ -16,11 +16,11 @@
  * The pages are plain static HTML (scripts/static-html.mjs removes React's
  * client code after the build), so this is the only script the pages run.
  */
-export function runtimeScript(tags: { gtm?: string; ga?: string }) {
+export function runtimeScript(tags: { gtm?: string; ga?: string; ghl?: string }) {
   return `(function(){
 function start(){try{menu();}catch(e){}try{reveal();}catch(e){}try{bg();}catch(e){}try{carousels();}catch(e){}try{accordions();}catch(e){}try{scripts();}catch(e){}try{forms();}catch(e){}try{search();}catch(e){}try{posts();}catch(e){}}
 start();
-var GTM=${JSON.stringify(tags.gtm ?? "")},GA=${JSON.stringify(tags.ga ?? "")};
+var GTM=${JSON.stringify(tags.gtm ?? "")},GA=${JSON.stringify(tags.ga ?? "")},GHL=${JSON.stringify(tags.ghl ?? "")};
 /* Analytics load on the visitor's first interaction (scroll, tap, key, mouse) or 5 s after the
    page has loaded, whichever comes first, so ~700 KB of tag scripts never delay the page itself. */
 var tagged=false;
@@ -210,7 +210,7 @@ function search(){
    loaded after the page, with the live options: the visitor's country is looked up. */
 function tel(input){
   function init(){
-    var iti=window.intlTelInput(input,{separateDialCode:false,nationalMode:true,autoPlaceholder:"polite",formatOnDisplay:true,initialCountry:"auto",utilsScript:"/vendor/intl-tel-input/utils.js",
+    var iti=input._iti=window.intlTelInput(input,{separateDialCode:false,nationalMode:true,autoPlaceholder:"polite",formatOnDisplay:true,initialCountry:"auto",utilsScript:"/vendor/intl-tel-input/utils.js",
       geoIpLookup:function(success){fetch("https://ipinfo.io",{headers:{Accept:"application/json"}}).then(function(r){return r.json()}).then(function(d){success(d&&d.country?d.country:"")},function(){success("")})}});
     var fmt=function(){if(window.intlTelInputUtils){var t=iti.getNumber(window.intlTelInputUtils.numberFormat.E164);if(iti.isValidNumber()&&typeof t==="string")iti.setNumber(t)}};
     input.addEventListener("keyup",fmt);input.addEventListener("change",fmt);
@@ -218,7 +218,27 @@ function tel(input){
   function load(){if(window.intlTelInput){init();return}var s=document.createElement("script");s.src="/vendor/intl-tel-input/intlTelInput.min.js";s.onload=init;document.head.appendChild(s)}
   if(document.readyState==="complete")load();else window.addEventListener("load",load);
 }
+/* Every form submission also goes to the GoHighLevel webhook (one JSON payload; "form" says which form). */
+function ghl(form,data){
+  if(!GHL)return;
+  data.form=form;data.page=location.href;data.page_title=document.title;data.submitted_at=new Date().toISOString();
+  for(var k in data)if(data[k]==null||data[k]==="")delete data[k];
+  try{fetch(GHL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(data),keepalive:true}).catch(function(){})}catch(e){}
+}
+function val(f,sel){var el=f.querySelector(sel);return el?String(el.value||"").trim():""}
+function splitName(n){var p=n.split(/\\s+/);return{first_name:p.shift()||"",last_name:p.join(" ")}}
+function leadForms(){
+  // Contact page (HoneyCRM form): still goes to HoneyCRM as before
+  var c=document.querySelectorAll("form.contact-form");
+  for(var i=0;i<c.length;i++)(function(f){f.addEventListener("submit",function(){if(f.checkValidity&&!f.checkValidity())return;
+    ghl("contact",{first_name:val(f,".firstName"),last_name:val(f,".lastName"),email:val(f,".email"),phone:val(f,".phone"),company_name:val(f,".companyname"),message:val(f,".comment")})})})(c[i]);
+  // Blog post sidebar (Zoho web-to-lead form): still goes to Zoho as before; only once Zoho's own check passed
+  var z=document.querySelectorAll('form[action*="crm.zoho.com"]');
+  for(var j=0;j<z.length;j++)(function(f){f.addEventListener("submit",function(e){if(e.defaultPrevented)return;
+    ghl("blog-sidebar",{first_name:val(f,'[name="First Name"]'),last_name:val(f,'[name="Last Name"]'),email:val(f,'[name="Email"]'),phone:val(f,'[name="Mobile"]'),company_name:val(f,'[name="Company"]'),message:val(f,'[name="Description"]')})})})(z[j]);
+}
 function forms(){
+  try{leadForms()}catch(e){}
   var fs=document.querySelectorAll("form.frm-fluent-form[data-pdf]");
   for(var i=0;i<fs.length;i++)(function(f){
     var phone=f.querySelector('input[type="tel"]');if(phone)tel(phone);
@@ -232,6 +252,10 @@ function forms(){
         if(bad){ok=false;if(!first)first=el}}
       if(!ok){first.focus();return}
       var pdf=(hidden&&hidden.value)||f.getAttribute("data-pdf");
+      var tel=f.querySelector('input[type="tel"]'),full=val(f,'[name="names[first_name]"]'),nm=splitName(full);
+      ghl(location.pathname.indexOf("/whitepaper/")===0?"whitepaper-download":"datasheet-download",{name:full,first_name:nm.first_name,last_name:nm.last_name,email:val(f,'[name="email"]'),
+        phone:tel&&tel._iti&&window.intlTelInputUtils?(tel._iti.getNumber()||tel.value):val(f,'[name="phone"]'),company_name:val(f,'[name="input_text"]'),country:val(f,'[name="country-list"]'),
+        resource:document.title.split("|")[0].trim(),pdf:pdf?new URL(pdf,location.href).href:""});
       if(pdf){try{var u=new URL(pdf,location.href);if(u.host===location.host||/(^|\\.)ttrtechnology\\.com$/.test(u.host))pdf=u.pathname+u.search}catch(x){}window.open(pdf,"_blank","noopener")}
     });
   })(fs[i]);
