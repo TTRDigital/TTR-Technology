@@ -78,3 +78,14 @@ html {
   margin-left: auto !important;
   margin-right: auto !important;
 }
+
+/* WordPress block text alignment (from the live site's global styles) */
+.has-text-align-center {
+  text-align: center;
+}
+.has-text-align-left {
+  text-align: left;
+}
+.has-text-align-right {
+  text-align: right;
+}

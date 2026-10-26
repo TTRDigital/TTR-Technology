@@ -67,6 +67,9 @@ function realSrcSet(srcSet: string, orig: number, shown: number) {
  */
 export function Img({ img, className, priority, eager, style, extra }: { img?: ImgT | null; className?: string; priority?: boolean; eager?: boolean; style?: CSSProperties; extra?: Record<string, string> }) {
   if (!img) return null;
+  // no file at all (a dead image on the live site, which showed its alt text): the same here
+  // eslint-disable-next-line @next/next/no-img-element
+  if (!img.src) return <img alt={img.alt ?? ""} />;
   // A file that was already missing on the live site: an empty image there kept one line of
   // height, so an empty <img> (no request) keeps the same space here.
   // eslint-disable-next-line @next/next/no-img-element

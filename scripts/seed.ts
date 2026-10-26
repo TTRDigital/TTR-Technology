@@ -54,6 +54,7 @@ const uploaded = new Map<string, string>();
 const missing = new Set<string>();
 
 async function asset(src: string): Promise<string | null> {
+  if (!src) return null; // an image kept without a file (dead on the live site)
   if (uploaded.has(src)) return uploaded.get(src)!;
   const file = join(root, "public", src);
   if (!src.startsWith("/") || !existsSync(file)) {

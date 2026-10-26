@@ -54,7 +54,7 @@ function Article({ p, node, priority }: { p: Post; node: EbNode; priority?: bool
     <div className="elementor-post__meta-data">
       {/* inline spans: the space between them is part of the live layout */}
       {meta.includes("author") && p.author ? <span className="elementor-post-author">{p.author}</span> : null}{" "}
-      {meta.includes("date") && p.date ? <span className="elementor-post-date">{p.dateText || formatDate(p.date)}</span> : null}
+      {meta.includes("date") && p.date ? <span className="elementor-post-date"> {p.dateText || formatDate(p.date)}</span> : null}
     </div>
   ) : null;
   const badge = cards && node.badge && p.categories?.[0] ? <div className="elementor-post__badge">{p.categories[0]}</div> : null;
